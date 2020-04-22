@@ -26,6 +26,7 @@ def scoring():
     bt[0, 1:] = 'L'  # Setting backtracking matrix to L and U for the first row and column
     bt[1:, 0] = 'U'
     d = {'A': 4, 'C': 3, 'G': 2, 'T': 1}  # A dictionary of the scores for if there is a match
+    directions = []
     for i in range(1, side):
         t = seq2[i-1]  # t is the letter of seq2 which is the row in backtracking matrix
         val = d[t]  # val is the score of a match if they match
@@ -48,10 +49,11 @@ def scoring():
         # the gaps on the vertical side of the scoring matrix
 
         for j in range(top - 1):
-            L = v[j] - 2  # Calculates the value of Left
-            if v[j+1] < L:  # If left is greater than the value of v (the greater of U and D) then:
+            left = v[j] - 2  # Calculates the value of Left
+            if v[j+1] < left:  # If left is greater than the value of v (the greater of U and D)
+                # then:
                 directions[j] = 'L'  # update directions to be L
-                v[j+1] = L  # and values to be the value of L
+                v[j+1] = left  # and values to be the value of L
 
         """
             This whole second for loop has been optimised to do as fewer calculations as 
