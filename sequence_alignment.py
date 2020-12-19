@@ -2,6 +2,7 @@
 import time
 import sys
 import numpy as np
+from numba import jit, int32
 
 
 # YOUR FUNCTIONS GO HERE -------------------------------------
@@ -13,7 +14,11 @@ import numpy as np
 # 2.x x>7 has only a very long integer value for storing so is therefore more efficient for this
 # application.
 
+scores_dict = {'A': 4, 'C': 3, 'G': 2, 'T': 1}
+
+# @profile
 def scoring():
+    # global scores_dict
     top = len(seq1) + 1
     side = len(seq2) + 1
     bt = np.zeros((side, top), dtype=np.str_)  # The backtracking matrix
@@ -25,11 +30,12 @@ def scoring():
 
     bt[0, 1:] = 'L'  # Setting backtracking matrix to L and U for the first row and column
     bt[1:, 0] = 'U'
-    d = {'A': 4, 'C': 3, 'G': 2, 'T': 1}  # A dictionary of the scores for if there is a match
+    # scores_dict = {'A': 4, 'C': 3, 'G': 2, 'T': 1}  # A dictionary of the scores for if there is
+    # a match
     directions = []
     for i in range(1, side):
         t = seq2[i-1]  # t is the letter of seq2 which is the row in backtracking matrix
-        val = d[t]  # val is the score of a match if they match
+        val = scores_dict[t]  # val is the score of a match if they match
 
         diagonals = np.where(s1 != t, -3, val) + v[:-1]  # np.where will iterate through s1 and
         # where the condition s!= t is true it will give the value -3, a mismatch, and where it
@@ -116,14 +122,15 @@ def finale(i):
     elif thing != best_alignment[1][i]:
         return -3
     else:
-        if thing == 'A':
-            return 4
-        elif thing == 'C':
-            return 3
-        elif thing == 'G':
-            return 2
-        else:
-            return 1
+        return scores_dict[thing]
+        # if thing == 'A':
+        #     return 4
+        # elif thing == 'C':
+        #     return 3
+        # elif thing == 'G':
+        #     return 2
+        # else:
+        #     return 1
 
 
 # DO NOT EDIT ------------------------------------------------
@@ -180,6 +187,6 @@ time_taken=stop-start
 # Print out the best
 print('Time taken: '+str(time_taken))
 print('Best (score '+str(best_score)+'):')
-# displayAlignment(best_alignment)
+displayAlignment(best_alignment)
 
 # -------------------------------------------------------------
